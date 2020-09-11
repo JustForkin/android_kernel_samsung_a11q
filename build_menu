@@ -66,7 +66,7 @@ build(){
   echo "${GREEN}***** Compiling kernel *****${STD}"
   [ ! -d "out" ] && mkdir out
   make -j$(nproc) -C $(pwd) O=$(pwd)/out KCFLAGS=-mno-android samsung/afaneh_${VARIANT}_defconfig
-  make -j$(nproc) -C $(pwd) O=$(pwd)/out KCFLAGS=-mno-android CONFIG_BUILD_ARM64_DT_OVERLAY=y
+  make -j$(nproc) -C $(pwd) O=$(pwd)/out KCFLAGS=-mno-android
 
   [ -e out/arch/arm64/boot/Image.gz ] && cp out/arch/arm64/boot/Image.gz $(pwd)/out/Image.gz
   if [ -e out/arch/arm64/boot/Image.gz-dtb ]; then
