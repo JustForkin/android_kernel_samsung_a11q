@@ -699,13 +699,17 @@
 #define KEY_SWTP_OUT    		0x2ef
 /*HS60 code for SR-ZQL1695-01000000493 by zhanghao6 at 20190712 end*/
 
-/*HS60 code for AR-ZQL1695-01000000070 by zhuqiang at 2019/7/18 start*/
+/*HS60 code for AR-ZQL1695-01000000070/HS50EU-1 by zhuqiang at 2020/08/28 start*/
 #ifdef HQ_FACTORY_BUILD
+/* for top sar */
 #define KEY_SAR_CLOSE           0x2f0
-#define KEY_SAR_BODY            0x2f1
 #define KEY_SAR_FAR             0x2f2
+
+/* for bottom sar */
+#define KEY_SAR2_CLOSE          0x2f1
+#define KEY_SAR2_FAR            0x2f3
 #endif
-/*HS60 code for AR-ZQL1695-01000000070 by zhuqiang at 2019/7/18 end*/
+/*HS60 code for AR-ZQL1695-01000000070/HS50EU-1 by zhuqiang at 2020/08/28 end*/
 
 /* We avoid low common keys in module aliases so they don't get huge. */
 #define KEY_MIN_INTERESTING	KEY_MUTE

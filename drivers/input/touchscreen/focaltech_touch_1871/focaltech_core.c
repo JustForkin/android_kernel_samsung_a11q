@@ -53,7 +53,7 @@
 #include <linux/power_supply.h>//charge flag
 #endif
 /* HS70 add for HS70-1007 by gaozhengwei at 2019/11/22 end */
-
+#include <linux/touchscreen_info.h>
 /*****************************************************************************
 * Private constant and macro definitions using #define
 *****************************************************************************/
@@ -1691,7 +1691,7 @@ static int fts_charger_notifier_callback(struct notifier_block *nb,unsigned long
 }
 #endif
 /* HS70 add for HS70-1007 by gaozhengwei at 2019/11/22 end */
-extern bool is_ilitek_tp;
+extern enum tp_module_used tp_is_used;
 static int fts_ts_probe_entry(struct fts_ts_data *ts_data)
 {
     int ret = 0;
@@ -2122,8 +2122,8 @@ static int fts_ts_probe(struct spi_device *spi)
     struct fts_ts_data *ts_data = NULL;
 
     FTS_INFO("Touch Screen(SPI BUS) driver prboe...");
-    if(is_ilitek_tp) {
-        FTS_INFO("ILITEK tp has probe ok, don't run FTS probe\n");
+    if(tp_is_used != UNKNOWN_TP) {
+        FTS_INFO("it is not focal TP\n");
         return -ENOMEM;
     }
 
@@ -2177,7 +2177,7 @@ static int fts_ts_probe(struct spi_device *spi)
     }
 #endif
 /* Huaqin add for HS70-195 add cmd for get IC and binary FW version by gaozhengwei at 2019/10/15 end */
-
+    tp_is_used = FOCALTECH;
     FTS_INFO("Touch Screen(SPI BUS) driver prboe successfully");
     return 0;
 }

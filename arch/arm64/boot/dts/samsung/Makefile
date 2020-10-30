@@ -74,6 +74,49 @@ samsung-sdm450-qrd-r09-overlay.dtbo-base := sdm450.dtb \
 	msm8953.dtb
 # HS70 code added by tangqingyong for HS70-11 at 20191003 end
 # HS70 code added by tangqingyong for HS70-9 at 20191002 end
+# HS50 code added by xudayi for SR-QL3095-01-139 at 20200714 start
+dtbo-$(CONFIG_ARCH_HS50) += samsung-sdm450-qrd-hs50-r00-default-overlay.dtbo \
+	samsung-sdm450-qrd-hs50-r01-overlay.dtbo \
+	samsung-sdm450-qrd-hs50-r02-overlay.dtbo \
+	samsung-sdm450-qrd-hs50-r03-overlay.dtbo \
+	samsung-sdm450-qrd-hs50-r04-overlay.dtbo \
+	samsung-sdm450-qrd-hs50-r05-overlay.dtbo \
+	samsung-sdm450-qrd-hs50-r06-overlay.dtbo \
+	samsung-sdm450-qrd-hs50-r07-overlay.dtbo \
+	samsung-sdm450-qrd-hs50-r08-overlay.dtbo \
+	samsung-sdm450-qrd-hs50-r09-overlay.dtbo
+
+samsung-sdm450-qrd-hs50-r00-default-overlay.dtbo-base := sdm450.dtb \
+	sdm450-pmi632.dtb \
+	msm8953.dtb
+samsung-sdm450-qrd-hs50-r01-overlay.dtbo-base := sdm450.dtb \
+	sdm450-pmi632.dtb \
+	msm8953.dtb
+samsung-sdm450-qrd-hs50-r02-overlay.dtbo-base := sdm450.dtb \
+	sdm450-pmi632.dtb \
+	msm8953.dtb
+samsung-sdm450-qrd-hs50-r03-overlay.dtbo-base := sdm450.dtb \
+	sdm450-pmi632.dtb \
+	msm8953.dtb
+samsung-sdm450-qrd-hs50-r04-overlay.dtbo-base := sdm450.dtb \
+	sdm450-pmi632.dtb \
+	msm8953.dtb
+samsung-sdm450-qrd-hs50-r05-overlay.dtbo-base := sdm450.dtb \
+	sdm450-pmi632.dtb \
+	msm8953.dtb
+samsung-sdm450-qrd-hs50-r06-overlay.dtbo-base := sdm450.dtb \
+	sdm450-pmi632.dtb \
+	msm8953.dtb
+samsung-sdm450-qrd-hs50-r07-overlay.dtbo-base := sdm450.dtb \
+	sdm450-pmi632.dtb \
+	msm8953.dtb
+samsung-sdm450-qrd-hs50-r08-overlay.dtbo-base := sdm450.dtb \
+	sdm450-pmi632.dtb \
+	msm8953.dtb
+samsung-sdm450-qrd-hs50-r09-overlay.dtbo-base := sdm450.dtb \
+	sdm450-pmi632.dtb \
+	msm8953.dtb
+# HS50 code added by xudayi for SR-QL3095-01-139 at 20200714 end
 else
 dtb-$(CONFIG_ARCH_MSM8937) += msm8937-pmi8950-mtp.dtb \
 	msm8937-interposer-sdm439-cdp.dtb \

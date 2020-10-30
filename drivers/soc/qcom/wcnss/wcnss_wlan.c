@@ -65,7 +65,14 @@
 /* HS60 code for HS60-5292 by lijingang at 2020/02/17 start */
 #define PCB_CHIP_FOR_1635           4
 /* HS60 code for HS60-5292 by lijingang at 2020/02/17 end */
+/* HS50 code for SR-QL3095-01-182 by weilong at 2020/08/05 start */
+#define PCB2_EUR_CHIP           38
+/* HS50 code for SR-QL3095-01-182 by weilong at 2020/08/05 end */
+/* HS50 code for HS50-915 by lijun at 2020/09/04 start */
+#define PCB3_NA_CHIP           39
+/* HS50 code for HS50-915 by lijun at 2020/09/04 end */
 /* HS60 code for HS60-371 by dongyuquan at 2019/08/15 end */
+
 /* 135: the key of shared mermory stored pcba info */
 #define HUAQIN_PCBA_CONFIG_SMEM_ITEM    135
 /* HS60 code for SR-ZQL1695-01-490 by lijingang at 2019/10/31 start */
@@ -317,6 +324,13 @@ static struct notifier_block wnb = {
 #define NVBIN_FILE_1635_PCB      "wlan/prima/WCNSS_qcom_wlan_nv_1635_pcb.bin"
 /* HS60 code for HS60-5292 by lijingang at 2020/02/17 end */
 /* HS60 code for HS60-371 by dongyuquan at 2019/08/15 end */
+
+/* HS50 code for SR-QL3095-01-182 by weilong at 2020/08/05 start */
+#define NVBIN_FILE_PCB2_EUR      "wlan/prima/WCNSS_qcom_wlan_nv_pcb2_eur.bin"
+/* HS50 code for SR-QL3095-01-182 by weilong at 2020/08/05 end */
+/* HS50 code for HS50-915 by lijun at 2020/09/04 start */
+#define NVBIN_FILE_PCB3_NA      "wlan/prima/WCNSS_qcom_wlan_nv_pcb3_na.bin"
+/* HS50 code for HS50-915 by lijun at 2020/09/04 end */
 #endif
 /* HS60 code for SR-ZQL1695-01-43 by dongyuquan at 2019/07/23 end */
 
@@ -2524,6 +2538,7 @@ static void wcnss_nvbin_dnld(void)
     /* HS60 code for SR-ZQL1695-01-43 by dongyuquan at 2019/07/23 start */
     #ifdef HQ_FACTORY_BUILD
     uint32_t sub_type = PCBA_IDS_MASK & get_board_id();
+    wcnss_log(INFO, "%s: sub_type=%x\n", __func__, sub_type);
 /* HS70 code for HS70-2560 by zhuxiaoming at 2019/12/18 start */
 /* HS60 code for SR-ZQL1871-01-235 by lijingang at 2019/11/01 start */
 #if defined (CONFIG_WCNSS_WLAN_NV_BIN_HS60)
@@ -2561,6 +2576,22 @@ static void wcnss_nvbin_dnld(void)
     } else {
         pcb_type = PCB2_OTHER_CHIP;
     }
+/* HS50 code for SR-QL3095-01-182 by weilong at 2020/08/05 start */
+/* HS50 code for SR-QL3095-01-182 by xiewangyang at 2020/09/03 start */
+/* HS50 code for HS50-915 by lijun at 2020/09/04 start */
+#elif defined (CONFIG_WCNSS_WLAN_NV_BIN_HS50)
+    if (sub_type == 0x2B0 || sub_type == 0x2C0 || sub_type == 0x2D0 || sub_type == 0x230 || sub_type == 0x240 || sub_type == 0x250) {
+        pcb_type = PCB1_CHIP;
+    } else if(sub_type == 0x260){
+		pcb_type = PCB2_EUR_CHIP;
+	} else if (sub_type == 0x280 || sub_type == 0x2A0 || sub_type == 0x270 || sub_type == 0x290) {
+        pcb_type = PCB3_NA_CHIP;
+    }  else {
+        pcb_type = PCB2_OTHER_CHIP;
+    }
+/* HS50 code for HS50-915 by lijun at 2020/09/04 end */
+/* HS50 code for SR-QL3095-01-182 by xiewangyang at 2020/09/03 end */
+/* HS50 code for SR-QL3095-01-182 by weilong at 2020/08/05 end */
 #endif/*CONFIG_WCNSS_WLAN_NV_BIN_HS60*/
 /* HS60 code for SR-ZQL1871-01-235 by lijingang at 2019/11/01 end */
 /* HS70 code for HS70-2560 by zhuxiaoming at 2019/12/18 end */
@@ -2581,7 +2612,15 @@ static void wcnss_nvbin_dnld(void)
     } else if (PCB_CHIP_FOR_1635 == pcb_type) {
         ret = request_firmware(&nv, NVBIN_FILE_1635_PCB, dev);
     /* HS60 code for HS60-5292 by lijingang at 2020/02/17 end */
-    } else {
+	/* HS50 code for SR-QL3095-01-182 by weilong at 2020/08/05 start */
+    } else if(PCB2_EUR_CHIP == pcb_type){
+        ret = request_firmware(&nv, NVBIN_FILE_PCB2_EUR, dev);
+    /* HS50 code for SR-QL3095-01-182 by weilong at 2020/08/05 end */
+    /* HS50 code for HS50-915 by lijun at 2020/09/04 start */
+    } else if(PCB3_NA_CHIP == pcb_type){
+        ret = request_firmware(&nv, NVBIN_FILE_PCB3_NA, dev);
+    /* HS50 code for HS50-915 by lijun at 2020/09/04 end */
+	} else {
         ret = request_firmware(&nv, NVBIN_FILE_PCB2_OTHER, dev);
     }
 

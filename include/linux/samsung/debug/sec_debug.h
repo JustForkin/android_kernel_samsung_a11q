@@ -39,6 +39,7 @@ enum sec_debug_upload_cause_t {
 	UPLOAD_CAUSE_SS_START = 0xC8535300,
 	UPLOAD_CAUSE_CP_ERROR_FATAL = UPLOAD_CAUSE_SS_START,
 	UPLOAD_CAUSE_MDM_ERROR_FATAL,
+	UPLOAD_CAUSE_MDM_CRITICAL_FATAL,
 	UPLOAD_CAUSE_MODEM_RST_ERR,
 	UPLOAD_CAUSE_ADSP_ERROR_FATAL,
 	UPLOAD_CAUSE_SLPI_ERROR_FATAL,
@@ -232,7 +233,7 @@ static inline void sec_debug_update_restart_reason(const char *cmd, const int in
 static inline void sec_debug_prepare_for_wdog_bark_reset(void) {}
 static inline void emerg_pet_watchdog(void) {}
 static inline char *sec_debug_get_erased_command_line(void) { return boot_command_line; }
-static inline uint64_t get_pa_dump_sink(void) { return 0ULL };
+static inline uint64_t get_pa_dump_sink(void) { return 0ULL; };
 static inline void sec_debug_upload_cause_str(enum sec_debug_upload_cause_t type, char *str, size_t len) {}
 
 /* FIXME: __deprected */

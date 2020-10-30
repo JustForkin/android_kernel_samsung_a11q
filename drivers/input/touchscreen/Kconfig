@@ -1445,5 +1445,46 @@ config TOUCHSCREEN_ILI
 	  report 10 touches at a time.
 
 		  If unusre, say N.
+config TOUCHSCREEN_ILI_HS50
+	bool "TOUCHSCREEN_ILI CHIPSET"
+	help
+	  Say Y here if you have a Elan CHIPSET touchscreen.
+	  ELAN controllers are multi touch controllers which can
+	  report 10 touches at a time.
+
+		  If unusre, say N.
+config TOUCHSCREEN_HIMAX_HS50
+	bool "TOUCHSCREEN_ILI CHIPSET"
+	help
+	  Say Y here if you have a Elan CHIPSET touchscreen.
+	  ELAN controllers are multi touch controllers which can
+	  report 10 touches at a time.
+
+		  If unusre, say N.
+
+config TOUCHSCREEN_NOVA_HS50
+	bool "TOUCHSCREEN_Nova CHIPSET"
+	help
+	  Say Y here if you have a Elan CHIPSET touchscreen.
+	  ELAN controllers are multi touch controllers which can
+	  report 10 touches at a time.
+
+		  If unusre, say N.
+source "drivers/input/touchscreen/Nova_touch_HS50/Kconfig"
+
+config TOUCHSCREEN_HIMAX_CHIPSET
+	bool "Himax touchpanel CHIPSET"
+	depends on I2C
+	help
+	  Say Y here if you have a Himax CHIPSET touchscreen.
+	  HIMAX controllers are multi touch controllers which can
+	  report 10 touches at a time.
+
+          If unsure, say N.
+
+source "drivers/input/touchscreen/hxchipset/Kconfig"
+
+source "drivers/input/touchscreen/hxchipset_HS50/Kconfig"
+
 
 endif

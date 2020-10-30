@@ -1374,6 +1374,9 @@ static int _mmc_sd_resume(struct mmc_host *host)
 		mmc_card_set_removed(host->card);
 		mmc_detect_change(host, msecs_to_jiffies(200));
 	} else if (err) {
+		/*huaiqn add for P200309-07335 by xudayi at 2020/04/29 start */
+		mmc_card_clr_suspended(host->card);
+		/*huaiqn add for P200309-07335 by xudayi at 2020/04/29 end */
 		goto out;
 	}
 	mmc_card_clr_suspended(host->card);

@@ -122,7 +122,9 @@ enum print_reason {
 #define CDP_CURRENT_UA			1500000
 /* HS70 add for HS70-919 set DCP_ICL to 3000mA by qianyingdong at 2019/11/28 start */
 #if defined(CONFIG_AFC)
-#define DCP_CURRENT_UA			3000000
+/* HS70 add for P200417-04435  set DCP_ICL to 1800mA by wangzikang at 2020/04/23 start */
+#define DCP_CURRENT_UA			1800000
+/* HS70 add for P200417-04435  set DCP_ICL to 1800mA by wangzikang at 2020/04/23 end */
 #else
 #define DCP_CURRENT_UA			2000000
 #endif
@@ -134,7 +136,9 @@ enum print_reason {
 #endif
 #endif
 /*HS70 add for HS70-919 enable AFC function by qianyingdong at 2019/11/18 end*/
-#define HVDCP_CURRENT_UA		3000000
+/* HS70 add for P200417-04435 set QC2.0\3.0 to 9V1.67A by qianyingdong at 2020/04/24 start */
+#define HVDCP_CURRENT_UA		1650000
+/* HS70 add for P200417-04435 set QC2.0\3.0 to 9V1.67A by qianyingdong at 2020/04/24 end */
 #define TYPEC_DEFAULT_CURRENT_UA	900000
 #define TYPEC_MEDIUM_CURRENT_UA		1500000
 #define TYPEC_HIGH_CURRENT_UA		3000000
@@ -497,6 +501,7 @@ enum {
 enum {
 	DETECT_SDM439_PLATFORM,
 	DETECT_SDM450_PLATFORM,
+	DETECT_SDM450_HS50,
 };
 /* HS70 add for HS70-135 Distinguish HS60 and HS70 charging by gaochao at 2019/10/10 end */
 
@@ -894,6 +899,9 @@ struct smb_charger {
 	#endif
 	#endif
 	/*HS70 add for HS70-919 enable AFC function by qianyingdong at 2019/11/18 end*/
+	/* HS50 add for SR-QL3095-01-67 Import default charger profile by wenyaqi at 2020/08/03 start */
+	bool			is_dcp;
+	/* HS50 add for SR-QL3095-01-67 Import default charger profile by wenyaqi at 2020/08/03 end */
 #if defined(CONFIG_TYPEC)
 	struct typec_port 		*port;
 	struct typec_partner 	*partner;

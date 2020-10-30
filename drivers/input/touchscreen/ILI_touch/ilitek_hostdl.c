@@ -803,7 +803,7 @@ int ilitek_tddi_fw_upgrade(int op)
 				ipio_err("TP reset failed while erasing data\n");
 		idev->xch_num = 0;
 		idev->ych_num = 0;
-		return ret;
+		//return ret;
 	}
 
 out:

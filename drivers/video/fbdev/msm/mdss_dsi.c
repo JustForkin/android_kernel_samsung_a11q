@@ -35,6 +35,7 @@
 #include "mdss_debug.h"
 #include "mdss_dsi_phy.h"
 #include "mdss_dba_utils.h"
+#include <linux/touchscreen_info.h>
 
 #define XO_CLK_RATE	19200000
 #define CMDLINE_DSI_CTL_NUM_STRING_LEN 2
@@ -57,9 +58,15 @@ enum {
 	};
 extern int mdss_mdp_parse_panel_id_kernel(void);
 /* HS70 code for HS70-133 by liufurong at 2019/10/31 start */
+/*HS50 code for SR-QL3095-01-120 by gaozhengwei at 2020/07/31 start*/
+enum tp_module_used tp_is_used = UNKNOWN_TP;
 #ifdef CONFIG_TOUCHSCREEN_ILI
+/*HS50 code for SR-QL3095-01-120 by gaozhengwei at 2020/07/31 end*/
 extern void ilitek_resume_by_ddi(void);
-extern bool is_ilitek_tp;
+extern void ili_resume_by_ddi(void);
+#endif
+#ifdef CONFIG_TOUCHSCREEN_ILI_HS50
+extern void ilitek_resume_by_ddi(void);
 #endif
 /* HS70 code for HS70-133 by liufurong at 2019/10/31 end */
 /*HS60 code for HS60-296 by wangqilin at 2019/08/13 end*/
@@ -1675,8 +1682,17 @@ int mdss_dsi_on(struct mdss_panel_data *pdata)
 		mdss_dsi_panel_reset(pdata, 1);
 	}
 	/* HS70 code for HS70-133 by liufurong at 2019/10/31 start */
-	#ifdef CONFIG_TOUCHSCREEN_ILI
-	if (is_ilitek_tp) {
+	/*HS50 code for SR-QL3095-01-120 by gaozhengwei at 2020/07/31 start*/
+	#if (defined CONFIG_TOUCHSCREEN_ILI)
+	/*HS50 code for SR-QL3095-01-120 by gaozhengwei at 2020/07/31 end*/
+	if (tp_is_used == ILITEK_ILI7807G) {
+		ilitek_resume_by_ddi();
+	} else if(tp_is_used == ILITEK_ILI7806S){
+		ili_resume_by_ddi();
+	}
+	#endif
+	#ifdef CONFIG_TOUCHSCREEN_ILI_HS50
+	if (tp_is_used == ILITEK_ILI7807G) {
 		ilitek_resume_by_ddi();
 	}
 	#endif

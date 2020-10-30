@@ -69,6 +69,9 @@ source "drivers/nfc/st-nci/Kconfig"
 source "drivers/nfc/nxp-nci/Kconfig"
 source "drivers/nfc/s3fwrn5/Kconfig"
 source "drivers/nfc/st95hf/Kconfig"
+# Huaqin modify for LSI NFC by zhangshuli at 2020/08/11 start
+source "drivers/nfc/samsung/Kconfig"
+# Huaqin modify for LSI NFC by zhangshuli at 2020/08/11 end
 endmenu
 
 config NFC_NQ

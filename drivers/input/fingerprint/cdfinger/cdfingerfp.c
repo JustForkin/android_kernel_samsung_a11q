@@ -84,6 +84,9 @@ struct cdfinger_key_map {
 #define CDFINGER_REPORT_KEY					_IOW(CDFINGER_IOCTL_MAGIC_NO,19,key_report_t)
 #define CDFINGER_NEW_KEYMODE				_IOW(CDFINGER_IOCTL_MAGIC_NO, 37, uint8_t)
 #define CDFINGER_WAKE_LOCK					_IOW(CDFINGER_IOCTL_MAGIC_NO,26,uint8_t)
+/* HS70 code for HS70-4985 by zhuqiang at 2020/03/26 start */
+#define CDFINGER_GET_HW_ID					_IO(CDFINGER_IOCTL_MAGIC_NO,39)
+/* HS70 code for HS70-4985 by zhuqiang at 2020/03/26 end */
 
 /*if want change key value for event , do it*/
 #define CF_NAV_INPUT_UP						600
@@ -103,7 +106,9 @@ struct cdfinger_key_map {
 #define DEVICE_NAME "fpsdev0"
 #define INPUT_DEVICE_NAME "cdfinger_input"
 
-//#define SUPPORT_ID_NUM
+/* HS70 code for HS70-4985 by zhuqiang at 2020/03/26 start */
+#define SUPPORT_ID_NUM
+/* HS70 code for HS70-4985 by zhuqiang at 2020/03/26 end */
 //#define POWER_GPIO
 #define POWER_REGULATOR
 
@@ -133,6 +138,9 @@ struct cdfingerfp_data {
 	u8 chip_id;
 #ifdef SUPPORT_ID_NUM
 	u32 id_num;
+	/* HS70 code for HS70-4985 by zhuqiang at 2020/03/26 start */
+	u32 hw_id_num;
+	/* HS70 code for HS70-4985 by zhuqiang at 2020/03/26 end */
 //	struct pinctrl *fps_pinctrl;
 //	struct pinctrl_state *fps_id_high;
 #endif
@@ -570,18 +578,22 @@ static long cdfinger_ioctl(struct file* filp, unsigned int cmd, unsigned long ar
 		case CDFINGER_REPORT_KEY:
 			err = cdfinger_report_key(cdfinger, arg);
 			break;
-
-		case CDFINGER_GETID:
+		/* HS70 code for HS70-4985 by zhuqiang at 2020/03/26 start */
+		case CDFINGER_GET_HW_ID:
 #ifdef SUPPORT_ID_NUM
-			err = cdfinger->chip_id;
+			err = cdfinger->hw_id_num;
 #endif
 			break;
 		/* HS70 code for HS70-186 by zhuqiang at 2019/10/24 start */
 		case CDFINGER_SETID:
 			cdfinger->chip_id = arg;
-			finger_sysfs = 0x02;
+			if (cdfinger->hw_id_num)
+			    finger_sysfs = 0x05;
+			else
+			    finger_sysfs = 0x02;
 			CDFINGER_DBG("set cdfinger chip id 0x%x\n",cdfinger->chip_id);
 		/* HS70 code for HS70-186 by zhuqiang at 2019/10/24 end */
+		/* HS70 code for HS70-4985 by zhuqiang at 2020/03/26 end */
 		default:
 			break;
 	}
@@ -643,25 +655,17 @@ static int cdfinger_fb_notifier_callback(struct notifier_block* self,
 
 	return retval;
 }
+
+/* HS70 code for HS70-4985 by zhuqiang at 2020/03/26 start */
 #ifdef SUPPORT_ID_NUM
 static int cdfinger_support_id(struct cdfingerfp_data *cdfinger)
 {
-	int err = 0;
-	//cdfinger->fps_id_high = pinctrl_lookup_state(cdfinger->fps_pinctrl, "cdfinger_id_pin");
-	//if (IS_ERR(cdfinger->fps_id_high)){
-	//	CDFINGER_ERR("look up state err\n");
-	//	return -1;
-	//}
-	//pinctrl_select_state(cdfinger->fps_pinctrl, cdfinger->fps_id_high);
+	int id_value = 0;
+
 	if (gpio_is_valid(cdfinger->id_num)) {
-		err = gpio_request(cdfinger->id_num, "cdfinger-id");
-		if (err) {
-			gpio_free(cdfinger->id_num);
-			err = gpio_request(cdfinger->id_num, "cdfinger-id");
-			if (err) {
-				CDFINGER_ERR("Could not request id gpio.\n");
-				return err;
-			}
+		if (gpio_request(cdfinger->id_num, "cdfinger-id")) {
+			CDFINGER_ERR("Could not request id gpio.\n");
+			return -EIO;
 		}
 		gpio_direction_input(cdfinger->id_num);
 	}
@@ -669,11 +673,12 @@ static int cdfinger_support_id(struct cdfingerfp_data *cdfinger)
 		CDFINGER_ERR(KERN_ERR "not valid irq gpio\n");
 		return -EIO;
 	}
-	err = gpio_get_value(cdfinger->id_num);
+	id_value = gpio_get_value(cdfinger->id_num);
 	gpio_free(cdfinger->id_num);
-	return err;
+	return id_value;
 }
 #endif
+/* HS70 code for HS70-4985 by zhuqiang at 2020/03/26 end */
 
 static int cdfinger_probe(struct platform_device *pdev)
 {
@@ -681,6 +686,11 @@ static int cdfinger_probe(struct platform_device *pdev)
 	int status = -ENODEV;
 
 	cdfingerdev = kzalloc(sizeof(struct cdfingerfp_data),GFP_KERNEL);
+	if(!cdfingerdev){
+		CDFINGER_ERR("cdfingerdev kzalloc err\n");
+		return -1;
+	}
+
 	cdfingerdev->cdfinger_dev = pdev;
 
 	status=cdfinger_parse_dts(&cdfingerdev->cdfinger_dev->dev, cdfingerdev);
@@ -689,13 +699,13 @@ static int cdfinger_probe(struct platform_device *pdev)
 		return -1;
 	}
 
+/* HS70 code for HS70-4985 by zhuqiang at 2020/03/26 start */
 #ifdef SUPPORT_ID_NUM
-	status = cdfinger_support_id(cdfingerdev);
-	if (status != 1) {  // id pin is high , cdfinger
-		CDFINGER_ERR("cdfinger support id error %d\n",status);
-		return -1;
-	}
+	cdfingerdev->hw_id_num = cdfinger_support_id(cdfingerdev);
+	CDFINGER_ERR("FPG_ID is %d\n",cdfingerdev->hw_id_num);
+
 #endif
+/* HS70 code for HS70-4985 by zhuqiang at 2020/03/26 end */
 
 	status = misc_register(&st_cdfinger_dev);
 	if (status) {

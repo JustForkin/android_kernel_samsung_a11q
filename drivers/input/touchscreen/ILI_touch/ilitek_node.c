@@ -239,7 +239,7 @@ struct record_state {
 	u8 g_b_wrong_bg : 1;
 };
 
-unsigned char g_user_buf[USER_STR_BUFF] = {0};
+static unsigned char g_user_buf[USER_STR_BUFF] = {0};
 
 int str2hex(char *str)
 {

@@ -374,7 +374,9 @@ rst_gpio_err:
 disp_en_gpio_err:
 	return rc;
 }
-
+/*HS70 code for HS70-5877 by liufurong at 2020/07/27 start*/
+bool g_system_is_shutdown = 0;
+/*HS70 code for HS70-5877 by liufurong at 2020/07/27 start*/
 int mdss_dsi_panel_reset(struct mdss_panel_data *pdata, int enable)
 {
 	struct mdss_dsi_ctrl_pdata *ctrl_pdata = NULL;
@@ -531,14 +533,14 @@ int mdss_dsi_panel_reset(struct mdss_panel_data *pdata, int enable)
 			usleep_range(100, 110);
 			gpio_free(ctrl_pdata->disp_en_gpio);
 		}
-		/*HS70 code for SR-ZQL1871-01-94 by liufurong at 2019/10/26 start*/
-		if (ctrl_pdata->panel_data.panel_info.reset_keephigh)
+		/*HS70 code for SR-ZQL1871-01-94 HS70-5877 by liufurong at 2020/07/27 start*/
+		if (ctrl_pdata->panel_data.panel_info.reset_keephigh && g_system_is_shutdown == 0)
 			gpio_set_value((ctrl_pdata->rst_gpio), 1);
 		else
 		{
 			gpio_set_value((ctrl_pdata->rst_gpio), 0);
 		}
-		/*HS70 code for SR-ZQL1871-01-94 by liufurong at 2019/10/26 end*/
+		/*HS70 code for SR-ZQL1871-01-94 HS70-5877 by liufurong at 2020/07/27 end*/
 		gpio_free(ctrl_pdata->rst_gpio);
 		if (gpio_is_valid(ctrl_pdata->mode_gpio))
 			gpio_free(ctrl_pdata->mode_gpio);

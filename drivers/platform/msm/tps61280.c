@@ -35,12 +35,12 @@
 #include <linux/sensors.h>
 #define TPS61280_NAME 			"tps61280"
 #define TPS61280_INPUT_DEV_NAME	"TPS61280"
-/*HS60 modify by limengxia for HQ000003 at 20190723 start*/
+/*HS70 modify by limengxia for HQ000003 at 20200804 start*/
 #define TPS61280_REG_NUM		4
 
 static unsigned int  InitDataAddr[TPS61280_REG_NUM] = {0xff, 0x01, 0x02, 0x03};
-static unsigned int InitDataVal[TPS61280_REG_NUM]  = {0x80, 0x05, 0x0B, 0x1D};
-/*HS60 modify by limengxia for HQ000003 at 20190723 end*/
+static unsigned int InitDataVal[TPS61280_REG_NUM]  = {0x80, 0x05, 0x0B, 0x1A};
+/*HS70 modify by limengxia for HQ000003 at 20200804 end*/
 extern char *saved_command_line;
 
 struct tps61280_data {

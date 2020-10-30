@@ -29,6 +29,9 @@
 #include <linux/string.h>
 #include <linux/uaccess.h>
 #include <linux/slab.h>
+/* Huaqin add for HS50-SR-QL3095-01-24 add camera node by xuxianwei at 2020/08/13 start */
+#include <kernel_project_defines.h>
+/* Huaqin add for HS50-SR-QL3095-01-24 add camera node by xuxianwei at 2020/08/13 end */
 #endif
 /* Huaqin add for HS60-01000000042 add camera node by xuxianwei at 2019/07/18 end */
 
@@ -43,6 +46,12 @@ static int32_t msm_sensor_driver_platform_probe(struct platform_device *pdev);
 
 /* Static declaration */
 static struct msm_sensor_ctrl_t *g_sctrl[MAX_CAMERAS];
+
+/*HS50 code for HS50-SR-QL3095-01-97 by chenjun6 at 2020/09/08 start*/
+#ifdef HUAQIN_KERNEL_PROJECT_HS50
+extern u32 hs50_board_id;
+#endif
+/*HS50 code for HS50-SR-QL3095-01-97 by chenjun6 at 2020/09/08 end*/
 
 static int msm_sensor_platform_remove(struct platform_device *pdev)
 {
@@ -95,7 +104,14 @@ static struct v4l2_subdev_info msm_sensor_driver_subdev_info[] = {
 #if CAM_MODULE_INFO_CONFIG
 /* Huaqin add for HS70-120 add camera node by chengzhi at 2019/10/02 start */
 #ifdef CONFIG_MSM_CAMERA_HS70ADDNODE
+/*HS50 code for HS50-SR-QL3095-01-97 by chenjun6 at 2020/09/08 start*/
+#ifdef HUAQIN_KERNEL_PROJECT_HS50
 static char *cameraModuleInfo[4] = {NULL, NULL, NULL, NULL};
+static char *cameraModuleInfoBack4[5] = {NULL, NULL, NULL, NULL,NULL};
+#else
+/*HS50 code for HS50-SR-QL3095-01-97 by chenjun6 at 2020/09/08 end*/
+static char *cameraModuleInfo[4] = {NULL, NULL, NULL, NULL};
+#endif
 #else
 static char *cameraModuleInfo[3] = {NULL, NULL, NULL};
 #endif
@@ -113,12 +129,35 @@ static ssize_t cameraModuleInfo_read
 	int rc = 0;
 /* Huaqin add for HS70-120 add camera node by chengzhi at 2019/10/02 start */
 #ifdef CONFIG_MSM_CAMERA_HS70ADDNODE
+/* Huaqin add for HS50-SR-QL3095-01-24 add camera node by xuxianwei at 2020/08/13 start */
+#if defined (HUAQIN_KERNEL_PROJECT_HS50)
+/*HS50 code for HS50-SR-QL3095-01-97 by chenjun6 at 2020/09/08 start*/
+	CDBG("read board_id is 0x%x",hs50_board_id);
+	if((hs50_board_id==0x40)||(hs50_board_id==0x90)||(hs50_board_id==0xA0)||(hs50_board_id==0xC0))
+		snprintf(buf, 150,
+			"rear camera:%s\nfront camera:%s\nsub camera:%s\nrear2 camera:%s\nrear3 camera:%s\n",
+			cameraModuleInfoBack4[0],
+			cameraModuleInfoBack4[1],
+			cameraModuleInfoBack4[2],
+			cameraModuleInfoBack4[3],
+			cameraModuleInfoBack4[4]);
+	else
+/*HS50 code for HS50-SR-QL3095-01-97 by chenjun6 at 2020/09/08 end*/
+		snprintf(buf, 150,
+				"rear camera:%s\nfront camera:%s\nsub camera:%s\nrear2 camera:%s\n",
+				cameraModuleInfo[0],
+				cameraModuleInfo[1],
+				cameraModuleInfo[2],
+				cameraModuleInfo[3]);
+#else
 	snprintf(buf, 150,
 			"rear camera:%s\nfront camera:%s\nsub camera:%s\nrear2 camera:%s\n",
 			cameraModuleInfo[0],
 			cameraModuleInfo[2],
 			cameraModuleInfo[1],
 			cameraModuleInfo[3]);
+#endif
+/* Huaqin add for HS50-SR-QL3095-01-24 add camera node by xuxianwei at 2020/08/13 end */
 #else
 	snprintf(buf, 150,
 			"rear camera:%s\nfront camera:%s\nsub camera:%s\n",
@@ -1208,7 +1247,16 @@ CSID_TG:
 	pr_err("%s probe succeeded", slave_info->sensor_name);
 /* Huaqin add for HS60-01000000042 add camera node by xuxianwei at 2019/07/18 start */
 #if CAM_MODULE_INFO_CONFIG
+/*HS50 code for HS50-SR-QL3095-01-97 by chenjun6 at 2020/09/08 start*/
+#ifdef HUAQIN_KERNEL_PROJECT_HS50
+	if((hs50_board_id==0x40)||(hs50_board_id==0x90)||(hs50_board_id==0xA0)||(hs50_board_id==0xC0))
+	cameraModuleInfoBack4[slave_info->camera_id] = slave_info->sensor_name;
+	else
 	cameraModuleInfo[slave_info->camera_id] = slave_info->sensor_name;
+#else
+/*HS50 code for HS50-SR-QL3095-01-97 by chenjun6 at 2020/09/08 end*/
+	cameraModuleInfo[slave_info->camera_id] = slave_info->sensor_name;
+#endif
 #endif
 /* Huaqin add for HS60-01000000042 add camera node by xuxianwei at 2019/07/18 end */
 	s_ctrl->bypass_video_node_creation =
